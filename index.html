@@ -1287,7 +1287,72 @@
                     font-size: 0.65rem;
                 }
             }
-        </style>
+        
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
     </head>
     <body>
         <nav>
@@ -1904,7 +1969,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                 </svg>
                             </li>
                             <li>
@@ -1991,7 +2121,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                     <style type="text/css" id="style1-6">
                                         .st0 {
                                             fill: #49021f;
@@ -1999,7 +2194,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                 </svg>
                             </li>
                             <li>
@@ -2163,7 +2423,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                     <style type="text/css" id="style1-6">
                                         .st0 {
                                             fill: #49021f;
@@ -2171,7 +2496,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                 </svg>
                             </li>
                             <li>
@@ -2268,7 +2658,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                     <style type="text/css" id="style1-6">
                                         .st0 {
                                             fill: #49021f;
@@ -2276,7 +2731,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                 </svg>
                             </li>
                             <li style="border-bottom: none">
@@ -2361,7 +2881,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                     <style type="text/css" id="style1-6">
                                         .st0 {
                                             fill: #49021f;
@@ -2369,7 +2954,72 @@
                                         .st1 {
                                             fill: #ff3366;
                                         }
-                                    </style>
+                                    
+/* ── Loading skeletons ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139,140,132,0.12) 25%,
+    rgba(139,140,132,0.22) 50%,
+    rgba(139,140,132,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Card thumbnail skeleton — fills card-shape */
+.card-shape.loading {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.card-shape.loading::after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.04) 25%,
+    rgba(254,255,239,0.10) 50%,
+    rgba(254,255,239,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+/* Fade-in once loaded */
+.card-thumb {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-thumb.loaded { opacity: 0.85; }
+.project-card.has-thumb:hover .card-thumb.loaded { opacity: 0.45; filter: brightness(0.6); }
+/* Overlay media item skeleton */
+.overlay-media-item.loading::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(254,255,239,0.03) 25%,
+    rgba(254,255,239,0.09) 50%,
+    rgba(254,255,239,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.overlay-media-item.loading .media-fg,
+.overlay-media-item.loading .media-bg-blur {
+  opacity: 0;
+}
+.overlay-media-item .media-fg   { transition: opacity 0.35s ease; }
+.overlay-media-item .media-bg-blur { transition: opacity 0.35s ease; }
+.overlay-media-item.ready .media-fg,
+.overlay-media-item.ready .media-bg-blur { opacity: 1; }
+
+</style>
                                 </svg>
                             </li>
                         </ul>
@@ -2697,6 +3347,7 @@
 
                 // Mount video with blurred bg
                 function mountVideoEl(item, src) {
+                  item.classList.add("loading");
                   const bg = document.createElement("video");
                   bg.src=src; bg.className="media-bg-blur";
                   bg.autoplay=true; bg.loop=true; bg.muted=true;
@@ -2709,6 +3360,8 @@
                     const vr=fg.videoWidth/fg.videoHeight, ir=item.clientWidth/item.clientHeight;
                     fg.style.height = (vr<ir ? item.clientHeight+"px" : "auto");
                     fg.style.width  = (vr<ir ? "auto" : item.clientWidth+"px");
+                    item.classList.remove("loading");
+                    item.classList.add("ready");
                   });
                   fg.addEventListener("play", ()=>{ bg.currentTime=fg.currentTime; bg.play().catch(()=>{}); });
                   fg.addEventListener("pause",()=>bg.pause());
@@ -2719,6 +3372,7 @@
 
                 // Mount image with blurred bg
                 function mountImageEl(item, src, alt) {
+                  item.classList.add("loading");
                   const bg = document.createElement("img");
                   bg.src=src; bg.className="media-bg-blur"; bg.alt="";
                   bg.setAttribute("aria-hidden","true");
@@ -2729,6 +3383,8 @@
                     const ir=item.clientWidth/item.clientHeight, ir2=fg.naturalWidth/fg.naturalHeight;
                     fg.style.height=(ir2<ir ? item.clientHeight+"px" : "auto");
                     fg.style.width =(ir2<ir ? "auto" : item.clientWidth+"px");
+                    item.classList.remove("loading");
+                    item.classList.add("ready");
                   };
                   fg.src=src;
                   item.appendChild(bg); item.appendChild(fg);
@@ -2753,10 +3409,21 @@
                           if (card) {
                             const shape=card.querySelector(".card-shape");
                             if (shape && !shape.querySelector("img[data-thumb]")) {
+                              // Show skeleton while thumb loads
+                              shape.classList.add("loading");
                               const tImg=new Image();
                               tImg.dataset.thumb="1"; tImg.className="card-thumb";
                               tImg.alt=p.title;
-                              tImg.onload=()=>{ shape.style.opacity="1"; shape.insertBefore(tImg,shape.firstChild); card.classList.add("has-thumb"); };
+                              tImg.onload=()=>{
+                                shape.style.opacity="1";
+                                shape.insertBefore(tImg,shape.firstChild);
+                                card.classList.add("has-thumb");
+                                // Fade in after paint
+                                requestAnimationFrame(()=>requestAnimationFrame(()=>{
+                                  tImg.classList.add("loaded");
+                                  shape.classList.remove("loading");
+                                }));
+                              };
                               tImg.src=tc;
                             }
                           }

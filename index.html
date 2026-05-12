@@ -2658,7 +2658,122 @@
             // ── Project overlay (runs after DOM is ready) ─────────────────
             document.addEventListener("DOMContentLoaded", function () {
                 // ── Project data ────────────────────────────────────────────────
-                const ASSETS = "Assets/"; // subfolder next to the HTML file
+                const ASSETS = "Assets/";
+                const VIDEO_EXTS = ["mp4","webm","mov","ogg","m4v"];
+                const IMAGE_EXTS = ["png","jpg","jpeg","webp","gif","avif"];
+                // Cache: resolvedMedia[projectIdx][slotIdx] = {src, isVideo} | null
+                const resolvedMedia = {};
+                const resolvedThumbs = {};
+
+                // Probe a base src (no ext) or exact src, call cb(resolvedSrc, isVideo)
+                function probeSrc(base, cb) {
+                  const raw = ASSETS + base;
+                  const dot = raw.lastIndexOf(".");
+                  const hasExt = dot !== -1 && dot > raw.lastIndexOf("/");
+                  if (hasExt) {
+                    const ext = raw.slice(dot+1).toLowerCase();
+                    cb(raw, VIDEO_EXTS.includes(ext)); return;
+                  }
+                  const cands = [...IMAGE_EXTS.map(e=>raw+"."+e), ...VIDEO_EXTS.map(e=>raw+"."+e)];
+                  let done = false;
+                  (function next(i) {
+                    if (i >= cands.length) { cb(null, false); return; }
+                    const c = cands[i], cExt = c.split(".").pop().toLowerCase();
+                    const isVid = VIDEO_EXTS.includes(cExt);
+                    if (isVid) {
+                      const v = document.createElement("video");
+                      v.preload = "metadata";
+                      v.onloadedmetadata = () => { if (!done) { done=true; cb(c,true); } };
+                      v.onerror = () => next(i+1);
+                      v.src = c;
+                    } else {
+                      const img = new Image();
+                      img.onload  = () => { if (!done) { done=true; cb(c,false); } };
+                      img.onerror = () => next(i+1);
+                      img.src = c;
+                    }
+                  })(0);
+                }
+
+                // Mount video with blurred bg
+                function mountVideoEl(item, src) {
+                  const bg = document.createElement("video");
+                  bg.src=src; bg.className="media-bg-blur";
+                  bg.autoplay=true; bg.loop=true; bg.muted=true;
+                  bg.volume=0; bg.playsInline=true;
+                  bg.setAttribute("muted","");
+                  const fg = document.createElement("video");
+                  fg.src=src; fg.controls=true; fg.playsInline=true;
+                  fg.style.cssText="position:relative;z-index:1;display:block;max-width:100%;max-height:100%;width:auto;height:auto;";
+                  fg.addEventListener("loadedmetadata",()=>{
+                    const vr=fg.videoWidth/fg.videoHeight, ir=item.clientWidth/item.clientHeight;
+                    fg.style.height = (vr<ir ? item.clientHeight+"px" : "auto");
+                    fg.style.width  = (vr<ir ? "auto" : item.clientWidth+"px");
+                  });
+                  fg.addEventListener("play", ()=>{ bg.currentTime=fg.currentTime; bg.play().catch(()=>{}); });
+                  fg.addEventListener("pause",()=>bg.pause());
+                  fg.addEventListener("seeked",()=>{ bg.currentTime=fg.currentTime; });
+                  bg.addEventListener("volumechange",()=>{ bg.muted=true; bg.volume=0; });
+                  item.appendChild(bg); item.appendChild(fg);
+                }
+
+                // Mount image with blurred bg
+                function mountImageEl(item, src, alt) {
+                  const bg = document.createElement("img");
+                  bg.src=src; bg.className="media-bg-blur"; bg.alt="";
+                  bg.setAttribute("aria-hidden","true");
+                  const fg = document.createElement("img");
+                  fg.alt=alt||"";
+                  fg.style.cssText="position:relative;z-index:1;display:block;max-width:100%;max-height:100%;width:auto;height:auto;";
+                  fg.onload=()=>{
+                    const ir=item.clientWidth/item.clientHeight, ir2=fg.naturalWidth/fg.naturalHeight;
+                    fg.style.height=(ir2<ir ? item.clientHeight+"px" : "auto");
+                    fg.style.width =(ir2<ir ? "auto" : item.clientWidth+"px");
+                  };
+                  fg.src=src;
+                  item.appendChild(bg); item.appendChild(fg);
+                }
+
+                // Preload all project media in the background
+                function preloadAll() {
+                  projects.forEach((p, pi) => {
+                    resolvedMedia[pi] = {};
+                    // Thumbnails
+                    const tBase = ASSETS + p.thumbnail;
+                    const tHasExt = tBase.includes(".") && tBase.lastIndexOf(".") > tBase.lastIndexOf("/");
+                    const tCands = tHasExt ? [tBase] : IMAGE_EXTS.map(e=>tBase+"."+e);
+                    let tDone=false;
+                    tCands.forEach(tc => {
+                      if (tDone) return;
+                      const ti=new Image();
+                      ti.onload=()=>{
+                        if (!tDone) {
+                          tDone=true; resolvedThumbs[pi]=tc;
+                          const card=document.querySelectorAll(".project-card")[pi];
+                          if (card) {
+                            const shape=card.querySelector(".card-shape");
+                            if (shape && !shape.querySelector("img[data-thumb]")) {
+                              const tImg=new Image();
+                              tImg.dataset.thumb="1"; tImg.className="card-thumb";
+                              tImg.alt=p.title;
+                              tImg.onload=()=>{ shape.style.opacity="1"; shape.insertBefore(tImg,shape.firstChild); card.classList.add("has-thumb"); };
+                              tImg.src=tc;
+                            }
+                          }
+                        }
+                      };
+                      ti.src=tc;
+                    });
+                    // Media slots
+                    p.media.forEach((m,mi) => {
+                      probeSrc(m.src, (rSrc, isVid) => {
+                        resolvedMedia[pi][mi] = rSrc ? {src:rSrc, isVideo:isVid} : null;
+                        if (rSrc && !isVid) { const i=new Image(); i.src=rSrc; } // warm image cache
+                        if (rSrc && isVid)  { const v=document.createElement("video"); v.preload="metadata"; v.src=rSrc; }
+                      });
+                    });
+                  });
+                }
                 const projects = [
                     {
                         num: "01",
@@ -2865,246 +2980,36 @@
                 const oSummary = document.getElementById("overlaySummary");
                 const closeBtn = document.getElementById("overlayClose");
 
-                // Give each card a data-index and inject thumbnail if available
-                document
-                    .querySelectorAll(".project-card")
-                    .forEach((card, i) => {
-                        card.dataset.index = i;
-                        card.addEventListener("click", () => openOverlay(i));
-                        // Inject thumbnail into card-shape if project has one
-                        const p = projects[i];
-                        if (p && p.thumbnail) {
-                            const shape = card.querySelector(".card-shape");
-                            if (shape) {
-                                if (!shape.querySelector("img[data-thumb]")) {
-                                    const tSrc = ASSETS + p.thumbnail;
-                                    const tHasExt =
-                                        tSrc.includes(".") &&
-                                        tSrc.lastIndexOf(".") >
-                                            tSrc.lastIndexOf("/");
-                                    const tExts = tHasExt
-                                        ? [tSrc]
-                                        : [
-                                              tSrc + ".png",
-                                              tSrc + ".jpg",
-                                              tSrc + ".jpeg",
-                                              tSrc + ".webp",
-                                          ];
-                                    (function tryThumb(idx) {
-                                        if (idx >= tExts.length) return;
-                                        const tImg = new Image();
-                                        tImg.alt = p.title;
-                                        tImg.dataset.thumb = "1";
-                                        tImg.className = "card-thumb";
-                                        tImg.onload = () => {
-                                            shape.style.opacity = "1";
-                                            shape.insertBefore(
-                                                tImg,
-                                                shape.firstChild,
-                                            );
-                                            card.classList.add("has-thumb");
-                                        };
-                                        tImg.onerror = () => tryThumb(idx + 1);
-                                        tImg.src = tExts[idx];
-                                    })(0);
-                                }
-                            }
-                        }
-                    });
+                // Give each card a click handler
+                document.querySelectorAll(".project-card").forEach((card, i) => {
+                    card.dataset.index = i;
+                    card.addEventListener("click", () => openOverlay(i));
+                });
+                preloadAll(); // preload all thumbnails and media in background
 
                 function openOverlay(i) {
                     const p = projects[i];
 
                     // Populate media
                     oMedia.innerHTML = "";
-                    p.media.forEach((m) => {
+                    p.media.forEach((m, mi) => {
                         const item = document.createElement("div");
                         item.className = "overlay-media-item";
-                        if (m.src) {
-                            const rawSrc = ASSETS + m.src;
-                            const dotIdx = rawSrc.lastIndexOf(".");
-                            const hasExt =
-                                dotIdx !== -1 &&
-                                dotIdx > rawSrc.lastIndexOf("/");
-                            const ext = hasExt
-                                ? rawSrc.slice(dotIdx + 1).toLowerCase()
-                                : "";
-                            const videoExts = [
-                                "mp4",
-                                "webm",
-                                "mov",
-                                "ogg",
-                                "m4v",
-                            ];
-                            const imageExts = [
-                                "png",
-                                "jpg",
-                                "jpeg",
-                                "webp",
-                                "gif",
-                                "avif",
-                            ];
-
-                            function mountVideo(src) {
-                                const bgVid = document.createElement("video");
-                                bgVid.src = src;
-                                bgVid.className = "media-bg-blur";
-                                bgVid.autoplay = true;
-                                bgVid.loop = true;
-                                bgVid.muted = true;
-                                bgVid.volume = 0; // belt-and-suspenders mute
-                                bgVid.playsInline = true;
-                                bgVid.setAttribute("muted", ""); // HTML attribute as well as property
-
-                                const fgVid = document.createElement("video");
-                                fgVid.src = src;
-                                fgVid.controls = true;
-                                fgVid.playsInline = true;
-                                // Inline styles override any browser default video sizing
-                                fgVid.style.cssText = [
-                                    "position:relative",
-                                    "z-index:1",
-                                    "display:block",
-                                    "max-width:100%",
-                                    "max-height:100%",
-                                    "width:auto",
-                                    "height:auto",
-                                    "object-fit:contain",
-                                ].join(";");
-
-                                // Once metadata loads we know aspect ratio — enforce sizing
-                                fgVid.addEventListener("loadedmetadata", () => {
-                                    const vw = fgVid.videoWidth;
-                                    const vh = fgVid.videoHeight;
-                                    if (!vw || !vh) return;
-                                    const itemW = item.clientWidth;
-                                    const itemH = item.clientHeight;
-                                    const videoRatio = vw / vh;
-                                    const itemRatio = itemW / itemH;
-                                    if (videoRatio < itemRatio) {
-                                        // Portrait or narrower — constrain by height
-                                        fgVid.style.height = itemH + "px";
-                                        fgVid.style.width = "auto";
-                                    } else {
-                                        // Landscape wider than frame — constrain by width
-                                        fgVid.style.width = itemW + "px";
-                                        fgVid.style.height = "auto";
-                                    }
-                                });
-
-                                // Only sync bg when fg is deliberately played by user
-                                fgVid.addEventListener("play", () => {
-                                    bgVid.currentTime = fgVid.currentTime;
-                                    bgVid.play().catch(() => {});
-                                });
-                                fgVid.addEventListener("pause", () =>
-                                    bgVid.pause(),
-                                );
-                                fgVid.addEventListener("seeked", () => {
-                                    bgVid.currentTime = fgVid.currentTime;
-                                });
-                                // Ensure bg stays muted even after play
-                                bgVid.addEventListener("volumechange", () => {
-                                    bgVid.muted = true;
-                                    bgVid.volume = 0;
-                                });
-                                item.appendChild(bgVid);
-                                item.appendChild(fgVid);
-                            }
-
-                            function mountImage(src, alt) {
-                                const bgImg = document.createElement("img");
-                                bgImg.src = src;
-                                bgImg.className = "media-bg-blur";
-                                bgImg.alt = "";
-                                bgImg.setAttribute("aria-hidden", "true");
-
-                                const fgImg = document.createElement("img");
-                                fgImg.alt = alt || "";
-                                fgImg.style.cssText = [
-                                    "position:relative",
-                                    "z-index:1",
-                                    "display:block",
-                                    "max-width:100%",
-                                    "max-height:100%",
-                                    "width:auto",
-                                    "height:auto",
-                                    "object-fit:contain",
-                                ].join(";");
-
-                                fgImg.onload = () => {
-                                    const iw = fgImg.naturalWidth;
-                                    const ih = fgImg.naturalHeight;
-                                    if (!iw || !ih) return;
-                                    const itemW = item.clientWidth;
-                                    const itemH = item.clientHeight;
-                                    if (iw / ih < itemW / itemH) {
-                                        fgImg.style.height = itemH + "px";
-                                        fgImg.style.width = "auto";
-                                    } else {
-                                        fgImg.style.width = itemW + "px";
-                                        fgImg.style.height = "auto";
-                                    }
-                                };
-
-                                fgImg.src = src;
-                                item.appendChild(bgImg);
-                                item.appendChild(fgImg);
-                            }
-
-                            if (hasExt && videoExts.includes(ext)) {
-                                mountVideo(rawSrc);
-                            } else if (hasExt && imageExts.includes(ext)) {
-                                mountImage(rawSrc, m.label);
-                            } else {
-                                const tryExts = [
-                                    ...imageExts.map((e) => rawSrc + "." + e),
-                                    ...videoExts.map((e) => rawSrc + "." + e),
-                                ];
-                                let loaded = false;
-                                function tryNext(i) {
-                                    if (i >= tryExts.length) {
-                                        item.innerHTML =
-                                            '<div class="media-placeholder">' +
-                                            getPlaceholderSVG(0, m.label) +
-                                            "</div>";
-                                        return;
-                                    }
-                                    const candidate = tryExts[i];
-                                    const cExt = candidate.split(".").pop();
-                                    if (videoExts.includes(cExt)) {
-                                        const probe =
-                                            document.createElement("video");
-                                        probe.oncanplay = () => {
-                                            if (!loaded) {
-                                                loaded = true;
-                                                item.innerHTML = "";
-                                                mountVideo(candidate);
-                                            }
-                                        };
-                                        probe.onerror = () => tryNext(i + 1);
-                                        probe.src = candidate;
-                                    } else {
-                                        const probe = new Image();
-                                        probe.onload = () => {
-                                            if (!loaded) {
-                                                loaded = true;
-                                                item.innerHTML = "";
-                                                mountImage(candidate, m.label);
-                                            }
-                                        };
-                                        probe.onerror = () => tryNext(i + 1);
-                                        probe.src = candidate;
-                                    }
+                        const cached = resolvedMedia[i] && resolvedMedia[i][mi];
+                        if (cached) {
+                            if (cached.isVideo) mountVideoEl(item, cached.src);
+                            else mountImageEl(item, cached.src, m.label);
+                        } else if (m.src) {
+                            probeSrc(m.src, (rSrc, isVid) => {
+                                if (rSrc) {
+                                    if (isVid) mountVideoEl(item, rSrc);
+                                    else mountImageEl(item, rSrc, m.label);
+                                } else {
+                                    item.innerHTML = '<div class="media-placeholder">' + getPlaceholderSVG(0, m.label) + "</div>";
                                 }
-                                tryNext(0);
-                            }
+                            });
                         } else {
-                            // placeholder with shape SVG matching the card
-                            item.innerHTML =
-                                '<div class="media-placeholder">' +
-                                getPlaceholderSVG(i, m.label) +
-                                "</div>";
+                            item.innerHTML = '<div class="media-placeholder">' + getPlaceholderSVG(0, m.label) + "</div>";
                         }
                         oMedia.appendChild(item);
                     });
@@ -3796,4 +3701,3 @@
         </div>
     </body>
 </html>
-
